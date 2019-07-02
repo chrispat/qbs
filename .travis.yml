@@ -36,11 +36,6 @@ jobs:
       script:
         - docker-compose run --rm ${SERVICE} scripts/build-qbs-with-qmake.sh
 
-    - <<: *build-on-bionic
-      name: With Qbs on Ubuntu bionic (mingw32_w64)
-      script:
-        - docker-compose run --rm ${SERVICE} qbs build profile:qt-mingw32_w64
-
     - &build-on-macos
       stage: Build Qbs and and run autotests
       name: With Qbs on macOS (xcode 10.3)
@@ -69,25 +64,36 @@ jobs:
         - qbs config defaultProfile qt
         - scripts/build-qbs-with-qbs.sh
 
-    - &build-on-windows
-      stage: Build Qbs and and run autotests
-      name: With Qbs on Windows (Visual Studio 2017)
-      os: windows
+    - <<: *build-on-macos
+      name: With Qbs on macOS (xcode 10.3) using iOS profile
+      osx_image: xcode10.3
       env:
-        # Need to build in release mode. Otherwise autotests would be too slow.
-        BUILD_OPTIONS="config:release"
-        QT_INSTALL_DIR=C:/Qt
-        QMAKE_PATH=${QT_INSTALL_DIR}/${QT_VERSION}/msvc2017_64/bin/qmake.exe
-        PATH="/c/Qt/Tools/QtCreator/bin:${PATH}"
-        WITH_DOCS=0
-        QBS_BUILD_PROFILE=qt
+        # Address sanitizer slows autotests down too much.
+        # We would hit the maximum build time on Travis.
+        BUILD_OPTIONS=modules.qbsbuildconfig.enableAddressSanitizer:false
+        QT_INSTALL_DIR=/Users/travis/Qt
+        QMAKE_PATH=${QT_INSTALL_DIR}/5.12.4/clang_64/bin/qmake
+        PATH="${QT_INSTALL_DIR}/Qt Creator.app/Contents/MacOS:${QT_INSTALL_DIR}/5.12.4/ios/bin:${PATH}"
+        QBS_AUTOTEST_PROFILE=xcode-iphoneos-arm64
       before_install:
-        # Install Qbs and Qt
-        - ./scripts/install-qt.sh -d ${QT_INSTALL_DIR} --version ${QT_VERSION} --toolchain win64_msvc2017_64 qtbase qtdeclarative qttools qtscript
-        - ./scripts/install-qt.sh -d ${QT_INSTALL_DIR} --version ${QTCREATOR_VERSION} qtcreator
-      script:
-        - qbs setup-toolchains --detect
-        - qbs setup-qt ${QMAKE_PATH} qt
-        - qbs config qt.baseProfile MSVC2017-x86
-        - qbs config defaultProfile qt
-        - scripts/build-qbs-with-qbs.sh
+        - curl -L -o qtbase-mac.7z        http://master.qt.io/online/qtsdkrepository/mac_x64/desktop/qt5_5124/qt.qt5.5124.clang_64/5.12.4-0-201906140148qtbase-MacOS-MacOS_10_13-Clang-MacOS-MacOS_10_13-X86_64.7z
+        - curl -L -o qtdeclarative-mac.7z http://master.qt.io/online/qtsdkrepository/mac_x64/desktop/qt5_5124/qt.qt5.5124.clang_64/5.12.4-0-201906140148qtdeclarative-MacOS-MacOS_10_13-Clang-MacOS-MacOS_10_13-X86_64.7z
+        - curl -L -o qttools-mac.7z       http://master.qt.io/online/qtsdkrepository/mac_x64/desktop/qt5_5124/qt.qt5.5124.clang_64/5.12.4-0-201906140148qttools-MacOS-MacOS_10_13-Clang-MacOS-MacOS_10_13-X86_64.7z
+        - curl -L -o qtscript-mac.7z      http://master.qt.io/online/qtsdkrepository/mac_x64/desktop/qt5_5124/qt.qt5.5124.qtscript.clang_64/5.12.4-0-201906140148qtscript-MacOS-MacOS_10_13-Clang-MacOS-MacOS_10_13-X86_64.7z
+        - curl -L -o qtbase-ios.7z        http://master.qt.io/online/qtsdkrepository/mac_x64/ios/qt5_5124/qt.qt5.5124.ios/5.12.4-0-201906140219qtbase-MacOS-MacOS_10_13-Clang-IOS-IOS_ANY-Multi.7z
+        - curl -L -o qtdeclarative-ios.7z http://master.qt.io/online/qtsdkrepository/mac_x64/ios/qt5_5124/qt.qt5.5124.ios/5.12.4-0-201906140219qtdeclarative-MacOS-MacOS_10_13-Clang-IOS-IOS_ANY-Multi.7z
+        - curl -L -o qttools-ios.7z       http://master.qt.io/online/qtsdkrepository/mac_x64/ios/qt5_5124/qt.qt5.5124.ios/5.12.4-0-201906140219qttools-MacOS-MacOS_10_13-Clang-IOS-IOS_ANY-Multi.7z
+        - curl -L -o qtscript-ios.7z      http://master.qt.io/online/qtsdkrepository/mac_x64/ios/qt5_5124/qt.qt5.5124.qtscript/5.12.4-0-201906140219meta.7z
+        - curl -L -o qtcreator.7z         http://master.qt.io/online/qtsdkrepository/mac_x64/desktop/tools_qtcreator/qt.tools.qtcreator/4.9.1-0qtcreator.7z
+        - 7z x -o${QT_INSTALL_DIR} qtbase-mac.7z
+        - 7z x -o${QT_INSTALL_DIR} qtdeclarative-mac.7z
+        - 7z x -o${QT_INSTALL_DIR} qttools-mac.7z
+        - 7z x -o${QT_INSTALL_DIR} qtscript-mac.7z
+        - 7z x -o${QT_INSTALL_DIR} qtbase-ios.7z
+        - 7z x -o${QT_INSTALL_DIR} qtdeclarative-ios.7z
+        - 7z x -o${QT_INSTALL_DIR} qttools-ios.7z
+        - 7z x -o${QT_INSTALL_DIR} qtscript-ios.7z
+        - 7z x -o${QT_INSTALL_DIR} qtcreator.7z
+        - printf "[Paths]\nPrefix = ..\n" > ${QT_INSTALL_DIR}/5.12.4/clang_64/bin/qt.conf
+        - printf "[Paths]\nPrefix = ..\n" > ${QT_INSTALL_DIR}/5.12.4/ios/bin/qt.conf
+        - pip2 install --user beautifulsoup4 lxml
