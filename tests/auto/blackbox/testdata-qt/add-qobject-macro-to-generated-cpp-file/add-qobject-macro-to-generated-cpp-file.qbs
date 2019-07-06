@@ -1,6 +1,7 @@
 import qbs.File
 
 QtApplication {
+    Depends { name: "Qt.core" }
     name: "p"
     files: ["main.cpp", "object.h"]
     Group {

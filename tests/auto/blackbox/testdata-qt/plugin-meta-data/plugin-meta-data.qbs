@@ -1,5 +1,11 @@
 Project {
     QtApplication {
+        property bool skip: {
+            var result = qbs.targetOS.contains("ios");
+            if (result)
+                console.info("Skip this test");
+            return result;
+        }
         name: "app"
         consoleApplication: true
 
