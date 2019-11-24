@@ -1129,7 +1129,7 @@ void TestApi::excludedInputs()
     QCOMPARE(dummyCount, 3);
 }
 
-static qbs::ErrorInfo forceRuleEvaluation(const qbs::Project project)
+static qbs::ErrorInfo forceRuleEvaluation(const qbs::Project &project)
 {
     qbs::BuildOptions buildOptions;
     buildOptions.setDryRun(true);
@@ -3038,7 +3038,7 @@ void TestApi::uic()
 qbs::ErrorInfo TestApi::doBuildProject(
     const QString &projectFilePath, BuildDescriptionReceiver *buildDescriptionReceiver,
     ProcessResultReceiver *procResultReceiver, TaskReceiver *taskReceiver,
-    const qbs::BuildOptions &options, const QVariantMap overriddenValues)
+    const qbs::BuildOptions &options, const QVariantMap &overriddenValues)
 {
     qbs::SetupProjectParameters params = defaultSetupParameters(projectFilePath);
     params.setOverriddenValues(overriddenValues);
