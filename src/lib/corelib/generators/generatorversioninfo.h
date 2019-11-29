@@ -46,15 +46,14 @@
 #include <tools/version.h>
 
 #include <set>
-
+#include <QFlags>
 namespace qbs {
 namespace gen {
 
 class QBS_EXPORT VersionInfo
 {
 public:
-    VersionInfo(const Version &version,
-                const std::set<utils::Architecture> &archs);
+    VersionInfo(const Version &version, utils::ArchitectureFlags archs);
     virtual ~VersionInfo() = default;
 
     bool operator<(const VersionInfo &other) const;
@@ -67,7 +66,7 @@ public:
 
 private:
     Version m_version;
-    std::set<utils::Architecture> m_archs;
+    utils::ArchitectureFlags m_archs;
 };
 
 quint32 qHash(const VersionInfo &info);
