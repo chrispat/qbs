@@ -53,20 +53,20 @@ namespace gen {
 class QBS_EXPORT VersionInfo
 {
 public:
-    VersionInfo(const Version &version, utils::ArchitectureFlags archs)
+    constexpr VersionInfo(const Version &version, utils::ArchitectureFlags archs)
         : m_version(version), m_archs(archs)
     {
     }
     virtual ~VersionInfo() = default;
 
-    bool operator<(const VersionInfo &other) const { return m_version < other.m_version; }
-    bool operator==(const VersionInfo &other) const
+    constexpr bool operator<(const VersionInfo &other) const { return m_version < other.m_version; }
+    constexpr bool operator==(const VersionInfo &other) const
     {
         return m_version == other.m_version && m_archs == other.m_archs;
     }
 
-    Version version() const { return m_version; }
-    bool containsArchitecture(utils::Architecture arch) const { return m_archs & arch; }
+    constexpr Version version() const { return m_version; }
+    constexpr bool containsArchitecture(utils::Architecture arch) const { return m_archs & arch; }
 
     virtual int marketingVersion() const;
 
