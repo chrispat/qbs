@@ -43,6 +43,8 @@
 #include <generators/generatorutils.h>
 #include <generators/generatorversioninfo.h>
 
+#include <gsl/span>
+
 namespace qbs {
 
 class IarewVersionInfo final : public gen::VersionInfo
@@ -54,7 +56,7 @@ public:
 
     int marketingVersion() const;
 
-    static std::set<IarewVersionInfo> knownVersions();
+    static gsl::span<const IarewVersionInfo> knownVersions();
 };
 
 } // namespace qbs

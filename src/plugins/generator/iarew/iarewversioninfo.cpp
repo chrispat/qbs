@@ -43,9 +43,9 @@
 
 namespace qbs {
 
-std::set<IarewVersionInfo> IarewVersionInfo::knownVersions()
+gsl::span<const IarewVersionInfo> IarewVersionInfo::knownVersions()
 {
-    static const std::set<IarewVersionInfo> known = {
+    static constexpr IarewVersionInfo known[] = {
         {Version(8), {gen::utils::Architecture::Arm}},
         {Version(7), {gen::utils::Architecture::Avr,
                       gen::utils::Architecture::Msp430}},

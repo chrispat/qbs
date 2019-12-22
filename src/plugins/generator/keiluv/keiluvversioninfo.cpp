@@ -37,16 +37,15 @@
 **
 ****************************************************************************/
 
-#include "keiluvconstants.h"
 #include "keiluvversioninfo.h"
 
 #include <QtCore/qdebug.h>
 
 namespace qbs {
 
-std::set<KeiluvVersionInfo> KeiluvVersionInfo::knownVersions()
+gsl::span<const KeiluvVersionInfo> KeiluvVersionInfo::knownVersions()
 {
-    static const std::set<KeiluvVersionInfo> known = {
+    static constexpr KeiluvVersionInfo known[] = {
         {Version(KeiluvConstants::v5::kUVisionVersion),
          {gen::utils::Architecture::Mcs51,
           gen::utils::Architecture::Arm}},

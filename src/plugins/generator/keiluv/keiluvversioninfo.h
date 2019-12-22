@@ -40,8 +40,12 @@
 #ifndef QBS_KEILUVVERSIONINFO_H
 #define QBS_KEILUVVERSIONINFO_H
 
+#include "keiluvconstants.h"
+
 #include <generators/generatorutils.h>
 #include <generators/generatorversioninfo.h>
+
+#include <gsl/span>
 
 namespace qbs {
 
@@ -54,7 +58,7 @@ public:
 
     int marketingVersion() const;
 
-    static std::set<KeiluvVersionInfo> knownVersions();
+    static gsl::span<const KeiluvVersionInfo> knownVersions();
 };
 
 } // namespace qbs
