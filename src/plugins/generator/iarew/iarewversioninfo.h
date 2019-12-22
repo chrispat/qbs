@@ -52,7 +52,7 @@ public:
         : gen::VersionInfo(version, archs)
     {}
 
-    int marketingVersion() const final;
+    int marketingVersion() const;
 
     static std::set<IarewVersionInfo> knownVersions();
 };

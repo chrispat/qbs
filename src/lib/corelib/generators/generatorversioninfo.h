@@ -57,7 +57,6 @@ public:
         : m_version(version), m_archs(archs)
     {
     }
-    virtual ~VersionInfo() = default;
 
     constexpr bool operator<(const VersionInfo &other) const { return m_version < other.m_version; }
     constexpr bool operator==(const VersionInfo &other) const
@@ -68,7 +67,7 @@ public:
     constexpr Version version() const { return m_version; }
     constexpr bool containsArchitecture(utils::Architecture arch) const { return m_archs & arch; }
 
-    virtual int marketingVersion() const;
+    int marketingVersion() const;
 
 private:
     Version m_version;
