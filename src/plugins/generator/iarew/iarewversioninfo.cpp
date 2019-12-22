@@ -43,13 +43,6 @@
 
 namespace qbs {
 
-IarewVersionInfo::IarewVersionInfo(
-        const Version &version,
-        gen::utils::ArchitectureFlags archs)
-    : gen::VersionInfo(version, archs)
-{
-}
-
 std::set<IarewVersionInfo> IarewVersionInfo::knownVersions()
 {
     static const std::set<IarewVersionInfo> known = {

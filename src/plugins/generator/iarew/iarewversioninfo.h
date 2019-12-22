@@ -48,8 +48,9 @@ namespace qbs {
 class IarewVersionInfo final : public gen::VersionInfo
 {
 public:
-    IarewVersionInfo(const Version &version,
-                     gen::utils::ArchitectureFlags archs);
+    IarewVersionInfo(const Version &version, gen::utils::ArchitectureFlags archs)
+        : gen::VersionInfo(version, archs)
+    {}
 
     int marketingVersion() const final;
 

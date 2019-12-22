@@ -48,8 +48,9 @@ namespace qbs {
 class KeiluvVersionInfo final : public gen::VersionInfo
 {
 public:
-    KeiluvVersionInfo(const Version &version,
-                      gen::utils::ArchitectureFlags archs);
+    KeiluvVersionInfo(const Version &version, gen::utils::ArchitectureFlags archs)
+        : gen::VersionInfo(version, archs)
+    {}
 
     int marketingVersion() const final;
 
