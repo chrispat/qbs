@@ -1,4 +1,10 @@
 Project {
+    condition: {
+        var result = qbs.targetPlatform === qbs.hostPlatform;
+        if (!result)
+            console.info("Project disabled");
+        return result;
+    }
     CppApplication {
         type: "application"
         consoleApplication: true // suppress bundle generation

@@ -1,4 +1,10 @@
 Project {
+    condition: {
+        var result = qbs.targetPlatform === qbs.hostPlatform;
+        if (!result)
+            console.info("Project disabled");
+        return result;
+    }
     CppApplication {
         name: "app"
         files: ["main.cpp"]

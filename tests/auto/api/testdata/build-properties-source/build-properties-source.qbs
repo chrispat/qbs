@@ -7,7 +7,7 @@ Project {
         Depends { name: 'cpp' }
 
         Properties {
-            condition: qbs.toolchain.contains("gcc")
+            condition: qbs.toolchain.contains("gcc") && qbs.targetPlatform === qbs.hostPlatform
             cpp.cxxFlags: "-march=native"
         }
 
