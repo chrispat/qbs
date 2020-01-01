@@ -4,7 +4,7 @@ Project {
     name: "Autotests"
     references: [
         "api/api.qbs",
-        "blackbox/blackbox.qbs",
+//        "blackbox/blackbox.qbs",
         "blackbox/blackbox-android.qbs",
         "blackbox/blackbox-apple.qbs",
         "blackbox/blackbox-clangdb.qbs",
