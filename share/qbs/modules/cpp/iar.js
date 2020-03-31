@@ -49,8 +49,16 @@ function compilerName(qbs) {
         return "iccstm8";
     case "msp430":
         return "icc430";
+    case "v850":
+        return "iccv850";
+    case "78k":
+        return "icc78k";
     case "rl78":
         return "iccrl78";
+    case "rx":
+        return "iccrx";
+    case "rh850":
+        return "iccrh850";
     }
     throw "Unable to deduce compiler name for unsupported architecture: '"
             + qbs.architecture + "'";
@@ -62,6 +70,10 @@ function assemblerName(qbs) {
         return "iasmarm";
     case "rl78":
         return "iasmrl78";
+    case "rx":
+        return "iasmrx";
+    case "rh850":
+        return "iasmrh850";
     case "mcs51":
         return "a8051";
     case "avr":
@@ -70,6 +82,10 @@ function assemblerName(qbs) {
         return "iasmstm8";
     case "msp430":
         return "a430";
+    case "v850":
+        return "av850";
+    case "78k":
+        return "a78k";
     }
     throw "Unable to deduce assembler name for unsupported architecture: '"
             + qbs.architecture + "'";
@@ -83,9 +99,15 @@ function linkerName(qbs) {
         return "ilinkstm8";
     case "rl78":
         return "ilinkrl78";
+    case "rx":
+        return "ilinkrx";
+    case "rh850":
+        return "ilinkrh850";
     case "mcs51":
     case "avr":
     case "msp430":
+    case "v850":
+    case "78k":
         return "xlink";
     }
     throw "Unable to deduce linker name for unsupported architecture: '"
@@ -97,10 +119,14 @@ function archiverName(qbs) {
     case "arm":
     case "stm8":
     case "rl78":
+    case "rx":
+    case "rh850":
         return "iarchive";
     case "mcs51":
     case "avr":
     case "msp430":
+    case "v850":
+    case "78k":
         return "xlib";
     }
     throw "Unable to deduce archiver name for unsupported architecture: '"
@@ -112,6 +138,8 @@ function staticLibrarySuffix(qbs) {
     case "arm":
     case "stm8":
     case "rl78":
+    case "rx":
+    case "rh850":
         return ".a";
     case "mcs51":
         return ".r51";
@@ -119,6 +147,10 @@ function staticLibrarySuffix(qbs) {
         return ".r90";
     case "msp430":
         return ".r43";
+    case "v850":
+        return ".r85";
+    case "78k":
+        return ".r26";
     }
     throw "Unable to deduce static library suffix for unsupported architecture: '"
             + qbs.architecture + "'";
@@ -129,6 +161,8 @@ function executableSuffix(qbs) {
     case "arm":
     case "stm8":
     case "rl78":
+    case "rx":
+    case "rh850":
         return ".out";
     case "mcs51":
         return qbs.debugInformation ? ".d51" : ".a51";
@@ -136,6 +170,10 @@ function executableSuffix(qbs) {
         return qbs.debugInformation ? ".d90" : ".a90";
     case "msp430":
         return qbs.debugInformation ? ".d43" : ".a43";
+    case "v850":
+        return qbs.debugInformation ? ".d85" : ".a85";
+    case "78k":
+        return qbs.debugInformation ? ".d26" : ".a26";
     }
     throw "Unable to deduce executable suffix for unsupported architecture: '"
             + qbs.architecture + "'";
@@ -146,6 +184,8 @@ function objectSuffix(qbs) {
     case "arm":
     case "stm8":
     case "rl78":
+    case "rx":
+    case "rh850":
         return ".o";
     case "mcs51":
         return ".r51";
@@ -153,6 +193,10 @@ function objectSuffix(qbs) {
         return ".r90";
     case "msp430":
         return ".r43";
+    case "v850":
+        return ".r85";
+    case "78k":
+        return ".r26";
     }
     throw "Unable to deduce object file suffix for unsupported architecture: '"
             + qbs.architecture + "'";
@@ -163,10 +207,14 @@ function imageFormat(qbs) {
     case "arm":
     case "stm8":
     case "rl78":
+    case "rx":
+    case "rh850":
         return "elf";
     case "mcs51":
     case "avr":
     case "msp430":
+    case "v850":
+    case "78k":
         return "ubrof";
     }
     throw "Unable to deduce image format for unsupported architecture: '"
@@ -186,6 +234,14 @@ function guessArchitecture(macros) {
         return "msp430";
     else if (macros["__ICCRL78__"] === "1")
         return "rl78";
+    else if (macros["__ICCRX__"] === "1")
+        return "rx";
+    else if (macros["__ICCRH850__"] === "1")
+        return "rh850";
+    else if (macros["__ICCV850__"] === "1")
+        return "v850";
+    else if (macros["__ICC78K__"] === "1")
+        return "78k";
 }
 
 function guessEndianness(macros) {
@@ -208,6 +264,10 @@ function guessVersion(macros, architecture)
     case "stm8":
     case "msp430":
     case "rl78":
+    case "rx":
+    case "rh850":
+    case "v850":
+    case "78k":
         return { major: parseInt(version / 100),
             minor: parseInt(version % 100),
             patch: 0,
@@ -219,12 +279,16 @@ function cppLanguageOption(compilerFilePath) {
     var baseName = FileInfo.baseName(compilerFilePath);
     switch (baseName) {
     case "iccarm":
-    case "rl78":
+    case "iccrl78":
+    case "iccrx":
+    case "iccrh850":
         return "--c++";
     case "icc8051":
     case "iccavr":
     case "iccstm8":
     case "icc430":
+    case "iccv850":
+    case "icc78k":
         return "--ec++";
     }
     throw "Unable to deduce C++ language option for unsupported compiler: '"
@@ -458,19 +522,21 @@ function compilerFlags(project, product, input, outputs, explicitlyDependsOn) {
         args.push("--no_warnings");
         break;
     case "all":
-        args.push("--deprecated_feature_warnings="
-            +"+attribute_syntax,"
-            +"+preprocessor_extensions,"
-            +"+segment_pragmas");
-        if (tag === "cpp")
-            args.push("--warn_about_c_style_casts");
+        if (input.qbs.architecture !== "78k") {
+            args.push("--deprecated_feature_warnings="
+                +"+attribute_syntax,"
+                +"+preprocessor_extensions,"
+                +"+segment_pragmas");
+            if (tag === "cpp")
+                args.push("--warn_about_c_style_casts");
+        }
         break;
     }
     if (input.cpp.treatWarningsAsErrors)
         args.push("--warnings_are_errors");
 
     // C language version flags.
-    if (tag === "c") {
+    if (tag === "c" && (input.qbs.architecture !== "78k")) {
         var knownValues = ["c89"];
         var cLanguageVersion = Cpp.languageVersion(
                     input.cpp.cLanguageVersion, knownValues, "C");
@@ -489,10 +555,14 @@ function compilerFlags(project, product, input, outputs, explicitlyDependsOn) {
     switch (input.qbs.architecture) {
     case "arm":
     case "rl78":
+    case "rx":
+    case "rh850":
         // Byte order flags.
         var endianness = input.cpp.endianness;
-        if (endianness && input.qbs.architecture === "arm")
+        if (endianness && (input.qbs.architecture === "arm"
+                || input.qbs.architecture === "rx")) {
             args.push("--endian=" + endianness);
+        }
         if (tag === "cpp") {
             // Enable C++ language flags.
             args.push("--c++");
@@ -508,6 +578,8 @@ function compilerFlags(project, product, input, outputs, explicitlyDependsOn) {
     case "mcs51":
     case "avr":
     case "msp430":
+    case "v850":
+    case "78k":
         // Enable C++ language flags.
         if (tag === "cpp")
             args.push("--ec++");
@@ -557,6 +629,8 @@ function assemblerFlags(project, product, input, outputs, explicitlyDependsOn) {
     switch (input.qbs.architecture) {
     case "stm8":
     case "rl78":
+    case "rx":
+    case "rh850":
         // Silent output generation flag.
         args.push("--silent");
         // Warning level flags.
@@ -618,6 +692,8 @@ function linkerFlags(project, product, input, outputs) {
     case "arm":
     case "stm8":
     case "rl78":
+    case "rx":
+    case "rh850":
         // Silent output generation flag.
         args.push("--silent");
         // Map file generation flag.
@@ -632,6 +708,8 @@ function linkerFlags(project, product, input, outputs) {
     case "mcs51":
     case "avr":
     case "msp430":
+    case "v850":
+    case "78k":
         // Silent output generation flag.
         args.push("-S");
         // Debug information flag.
