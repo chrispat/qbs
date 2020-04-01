@@ -96,7 +96,7 @@ Module {
         if (targetOS.containsAny(["haiku", "vxworks", "unix"]))
             return "gcc";
     }
-    readonly property stringList toolchain: Utilities.canonicalToolchain(toolchainType)
+    property stringList toolchain: Utilities.canonicalToolchain(toolchainType)
     property string architecture
     property bool install: false
     property path installSourceBase
