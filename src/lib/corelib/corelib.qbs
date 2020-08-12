@@ -258,7 +258,8 @@ QbsLibrary {
         prefix: "jsextensions/"
         condition: qbs.targetOS.contains("darwin")
         files: [
-            "propertylist.mm",
+            "propertylist_darwin.h",
+            "propertylist_darwin.mm",
             "propertylistutils.h",
             "propertylistutils.mm",
         ]
