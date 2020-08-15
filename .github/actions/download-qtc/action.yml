@@ -1,0 +1,17 @@
+name: 'Download Qt Creator'
+description: 'Downloads Qt Creator'
+inputs:
+  qtc-version:
+    description: 'Qt Creator version'
+    required: false
+    default: '4.12.4'
+runs:
+  using: "composite"
+  steps:
+    - name: Install Qt Creator
+      run: ./scripts/install-qt.sh -d "$HOME/Qt" --version ${{ inputs.qtc-version }} qtcreator
+      shell: bash
+    - name: Update PATH
+      run: echo '::add-path::"$HOME/Qt/Qt Creator.app/Contents/MacOS"'
+      shell: bash
+

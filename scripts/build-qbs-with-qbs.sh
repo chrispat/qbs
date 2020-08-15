@@ -59,7 +59,7 @@ fi
 BUILD_OPTIONS="\
     profile:${QBS_BUILD_PROFILE} \
     modules.qbsbuildconfig.enableAddressSanitizer:true \
-    modules.qbsbuildconfig.enableProjectFileUpdates:true \
+    modules.qbsbuildconfig.enableProjectFileUpdates:false \
     modules.qbsbuildconfig.enableUnitTests:true \
     modules.cpp.treatWarningsAsErrors:true \
     modules.cpp.separateDebugInformation:true \
@@ -76,6 +76,11 @@ qbs build ${BUILD_OPTIONS}
 WITH_DOCS=${WITH_DOCS:-1}
 if [ "$WITH_DOCS" -ne 0 ]; then
     qbs build -p "qbs documentation" ${BUILD_OPTIONS}
+fi
+
+WITH_TESTS=${WITH_TESTS:-1}
+if [ "$WITH_TESTS" -eq 0 ]; then
+    exit 0
 fi
 
 QMAKE_PATH=${QMAKE_PATH:-$(which qmake)}
