@@ -23,7 +23,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 option(WITH_TESTS "Build Tests" ON)
-option(WITH_UNIT_TESTS "Build Unit Tests" OFF)
+option(WITH_UNIT_TESTS "Build Unit Tests" ON)
 option(WITH_PROJECT_FILE_UPDATES "Enable project file updates support" OFF)
 option(INSTALL_PUBLIC_HEADERS "Whether to install public headers" ON)
 
