@@ -12,6 +12,6 @@ runs:
       run: ./scripts/install-qt.sh -d "$HOME/Qt" --version ${{ inputs.qtc-version }} qtcreator
       shell: bash
     - name: Update PATH
-      run: echo '::add-path::"$HOME/Qt/Qt Creator.app/Contents/MacOS"'
+      run: echo '::add-path::"$HOME/Qt/Qt\ Creator.app/Contents/MacOS"'
       shell: bash
 
