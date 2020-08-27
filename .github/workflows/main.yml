@@ -108,23 +108,21 @@ jobs:
       with:
         path: ~/.ccache
         key: ${{ runner.os }}-ccache
-    - name: Install Qt Creator
-      uses: ./.github/actions/download-qtc
     - name: Install required packages
       run: brew install capnp ccache grpc icoutils makensis protobuf python3 p7zip
     - name: Install Qt
-      run:  ./scripts/install-qt.sh -d ${QT_INSTALL_DIR} --version ${QT_VERSION} qtbase qtdeclarative qttools qtscript qtscxml
-#      run: ./scripts/install-qt.sh -d ${QT_INSTALL_DIR} --version ${QTCREATOR_VERSION} qtcreator
-#    - name: Update PATH
-#      run: echo '::add-path::"${{ env.QT_INSTALL_DIR }}/Qt\ Creator.app/Contents/MacOS"'
+      run: |  
+        ./scripts/install-qt.sh -d ${QT_INSTALL_DIR} --version ${QT_VERSION} qtbase qtdeclarative qttools qtscript qtscxml
+        ./scripts/install-qt.sh -d ${QT_INSTALL_DIR} --version ${QTCREATOR_VERSION} qtcreator
+        echo '::add-path::"${{ env.QT_INSTALL_DIR }}/Qt\\ Creator.app/Contents/MacOS"'
     - name: ls
       run: ls -l "$HOME/Qt/Qt Creator.app/Contents/MacOS"
     - name: Print PATH
-      run: bash -c "echo $PATH"
+      run: echo $PATH
     - name: Print ccache stats
       run: ccache -s
     - name: which
-      run: bash -c "which qbs"
+      run: which qbs
 #    - name: naive test
 #      run: hash qbs
     - name: Setup toolchains
