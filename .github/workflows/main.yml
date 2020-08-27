@@ -110,6 +110,7 @@ jobs:
         key: ${{ runner.os }}-ccache
     - name: Install Qt Creator
       uses: ./.github/actions/download-qtc
+      
     - name: Install required packages
       run: brew install capnp ccache grpc icoutils makensis protobuf python3 p7zip
     - name: Install Qt
